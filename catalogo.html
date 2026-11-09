@@ -14,6 +14,7 @@
         .filter-section select { padding: 10px; font-size: 16px; border-radius: 4px; border: 1px solid #ccc; width: 250px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-bottom: 30px; }
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+        .card img { max-width: 100%; height: 200px; object-fit: cover; border-radius: 6px; margin-bottom: 15px; }
         .card h4 { margin: 15px 0 5px 0; font-size: 18px; }
         .card .meta { color: #666; font-size: 14px; margin-bottom: 10px; }
         .card .price { font-size: 20px; font-weight: bold; color: #E50914; margin: 10px 0; }
@@ -57,12 +58,12 @@
 
     <script>
         const productos = [
-            { id: 1, nombre: "Calcetines Marty McFly", cat: "Ciencia Ficción", precio: 5990, stock: 12 },
-            { id: 2, nombre: "Calcetines Freddy Krueger", cat: "Terror 80s", precio: 6490, stock: 5 },
-            { id: 3, nombre: "Calcetines Homer Simpson", cat: "Animación", precio: 4990, stock: 20 }
+            { id: 1, nombre: "Calcetines Retro Sci-Fi McFly", cat: "Ciencia Ficción", precio: 5990, stock: 12, img: "https://unsplash.com" },
+            { id: 2, nombre: "Calcetines Sláshers Terror 80s", cat: "Terror 80s", precio: 6490, stock: 5, img: "https://unsplash.com" },
+            { id: 3, nombre: "Calcetines Dibujos Animados Springfield", cat: "Animación", precio: 4990, stock: 20, img: "https://unsplash.com" }
         ];
 
-        let carrito = [];
+        let carrito =;
 
         function renderProducts(lista) {
             const grid = document.getElementById("productGrid");
@@ -71,7 +72,7 @@
                 grid.innerHTML += `
                     <div class="card">
                         <div>
-                            <div style="width:100%; height:120px; background:#ddd; display:flex; align-items:center; justify-content:center; border-radius:6px; font-weight:bold; color:#666;">🧦 Foto Producto</div>
+                            <img src="${p.img}" alt="${p.nombre}">
                             <h4>${p.nombre}</h4>
                             <div class="meta">Colección: ${p.cat}<br>Stock: ${p.stock} u. | Tallas: M, L</div>
                         </div>
@@ -111,7 +112,7 @@
             if(carrito.length === 0) return alert("El carrito de compras está vacío.");
             const orderId = "SB-" + Math.floor(Math.random() * 900000 + 100000);
             alert(`🎉 [PROTOTIPO WEB] Checkout Exitoso\n\nIdentificador Único de Pedido: ${orderId}\nTotal: $${document.getElementById("cartTotal").innerText}\n\nCanal protegido mediante protocolo seguro HTTPS (RNF02).`);
-            carrito = [];
+            carrito =;
             updateCart();
         }
 
