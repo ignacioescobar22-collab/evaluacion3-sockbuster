@@ -62,12 +62,12 @@
 
     <script>
         const productos = [
-            { id: 1, nombre: "Calcetines Marty McFly", cat: "Ciencia Ficción", precio: 5990, stock: 12, img: "https://unsplash.com" },
-            { id: 2, nombre: "Calcetines Freddy Krueger", cat: "Terror 80s", precio: 6490, stock: 5, img: "https://unsplash.com" },
-            { id: 3, nombre: "Calcetines Homer Simpson", cat: "Animación", precio: 4990, stock: 20, img: "https://unsplash.com" }
+            { id: 1, nombre: "Calcetines Marty McFly", cat: "Ciencia Ficción", precio: 5990, stock: 12, img: "https://picsum.photos" },
+            { id: 2, nombre: "Calcetines Freddy Krueger", cat: "Terror 80s", precio: 6490, stock: 5, img: "https://picsum.photos" },
+            { id: 3, nombre: "Calcetines Homer Simpson", cat: "Animación", precio: 4990, stock: 20, img: "https://picsum.photos" }
         ];
 
-        let carrito = [];
+        let carrito =;
 
         function renderProducts(lista) {
             const grid = document.getElementById("productGrid");
@@ -121,7 +121,7 @@
             if(carrito.length === 0) return alert("El carrito de compras está vacío.");
             const orderId = "SB-" + Math.floor(Math.random() * 900000 + 100000);
             alert(`🎉 [PROTOTIPO WEB] Checkout Exitoso\n\nIdentificador Único de Pedido: ${orderId}\nTotal: $${document.getElementById("cartTotal").innerText}\n\nCanal protegido de extremo a extremo mediante protocolo seguro HTTPS (RNF02).`);
-            carrito = [];
+            carrito =;
             updateCart();
         }
 
