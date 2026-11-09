@@ -1,1 +1,113 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Sockbuster - Arquitectura</title><script type="module">import mermaid from "https://jsdelivr.net";mermaid.initialize({startOnLoad:true});</script><style>body{font-family:Arial,sans-serif;padding:20px;background-color:#f9f9f9;}h2{color:#E50914;border-bottom:2px solid #E50914;padding-bottom:5px;}.box{background:white;padding:20px;margin-bottom:20px;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ddd;padding:10px;}th{background:#f2f2f2;}</style></head><body><h2>Documentación Arquitectura UML (Paradigma 4+1)</h2><div class="box"><h3>Matriz de Trazabilidad</h3><table><tr><th>RF/RNF</th><th>Descripción</th><th>Vista UML</th></tr><tr><td>RF01</td><td>Catálogo temático</td><td>Lógica / Escenarios</td></tr><tr><td>RF02</td><td>Carrito y Checkout</td><td>Procesos (Secuencia)</td></tr><tr><td>RF03</td><td>Inventario</td><td>Lógica (Clases)</td></tr><tr><td>RF04</td><td>Reseñas de Fanáticos</td><td>Lógica (Clases)</td></tr><tr><td>RNF01</td><td>Carga <2s</td><td>Física (Despliegue)</td></tr><tr><td>RNF02</td><td>Seguridad HTTPS/JWT</td><td>Física / Desarrollo</td></tr></table></div><div class="box"><h3>Vista de Escenarios (Casos de Uso)</h3><pre class="mermaid">graph TD;Cliente((Cliente))-->CU01(CU01: Ver Catálogo);Cliente-->CU02(CU02: Comprar Calcetines);Admin((Admin))-->CU03(CU03: Gestionar Inventario);CU02-.->|include|CU04(CU04: Autenticar JWT);CU03-.->|include|CU04;</pre></div><div class="box"><h3>Vista Lógica (Clases)</h3><pre class="mermaid">classDiagram;Coleccion "1" *-- "0..*" Calcetin;Pedido "1" *-- "1..*" Detalle;class Calcetin{+int id+string nombre+double precio+int stock}class Pedido{+int idPedido+double total+generarResumen()}</pre></div><div class="box"><h3>Vista de Procesos (Secuencia Checkout)</h3><pre class="mermaid">sequenceDiagram;Cliente->>Carrito: Clic Checkout;Carrito->>API: POST /checkout (JWT);API->>BaseDatos: Guardar Pedido;BaseDatos-->>API: OK (ID Único);API-->>Carrito: Resumen Compra;Carrito-->>Cliente: Mostrar Éxito;</pre></div><div class="box"><h3>Vista de Desarrollo y Física</h3><pre class="mermaid">graph LR;Navegador[Navegador Cliente]-- "HTTPS / Puerto 443" -->CDN[Hosting Cloud Vercel/GitHub Pages];</pre></div><br><a href="index.html">Volver al Inicio</a></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sockbuster - Documentación Técnica 4+1</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; padding: 0; margin: 0; background-color: #f0f2f5; color: #333; }
+        header { background: #111; color: white; padding: 30px; text-align: center; border-bottom: 4px solid #E50914; }
+        header h1 { margin: 0; font-size: 28px; color: #E50914; }
+        header a { color: white; text-decoration: none; font-weight: bold; background: #333; padding: 8px 15px; border-radius: 4px; display: inline-block; margin-top: 10px; }
+        .content { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .view-section { background: white; padding: 30px; margin-bottom: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        h2 { color: #E50914; border-bottom: 2px solid #eee; padding-bottom: 8px; margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table th, table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        table th { background-color: #f8f9fa; font-weight: bold; }
+        .mermaid { background: #fafafa; padding: 20px; border-radius: 6px; border: 1px solid #eaeaea; overflow-x: auto; margin-top: 20px; }
+        .justificacion { background: #e9ecef; padding: 15px; border-left: 5px solid #007bff; margin-top: 15px; border-radius: 0 4px 4px 0; font-style: italic; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎬 Sockbuster - Arquitectura de Software (Modelo 4+1)</h1>
+        <a href="index.html">Volver al Inicio</a>
+    </header>
+    <div class="content">
+        <div class="view-section">
+            <h2>1. Vista de Casos de Uso (Scenario View)</h2>
+            <p>Representa los requisitos funcionales del sistema desde la perspectiva del usuario y administrador.</p>
+            <div class="mermaid">
+                graph TD
+                    Cliente -->|RF01| Explorar[Explorar Catálogo por Colección]
+                    Cliente -->|RF02| Gestionar[Gestionar Carrito y Compras]
+                    Cliente -->|RNF02| PagoSeguro[Checkout Seguro HTTPS]
+                    Admin -->|RF03| Mantenedor[Mantenedor de Stock y Productos]
+            </div>
+        </div>
+
+        <div class="view-section">
+            <h2>2. Vista Lógica (Logical View)</h2>
+            <p>Clases y componentes principales de la aplicación web front-end.</p>
+            <div class="mermaid">
+                classDiagram
+                    class Producto {
+                        +int id
+                        +String nombre
+                        +String cat
+                        +double precio
+                        +int stock
+                        +String img
+                    }
+                    class Carrito {
+                        +Array items
+                        +addItem()
+                        +removeItem()
+                        +calcularTotal()
+                    }
+                    class VistaCatalogo {
+                        +renderProducts()
+                        +filterProducts()
+                        +simulateCheckout()
+                    }
+                    VistaCatalogo --> Producto : Muestra
+                    VistaCatalogo --> Carrito : Administra
+            </div>
+        </div>
+
+        <div class="view-section">
+            <h2>3. Vista de Procesos (Process View)</h2>
+            <p>Diagrama de secuencia para el flujo de compra interactiva.</p>
+            <div class="mermaid">
+                sequenceDiagram
+                    autonumber
+                    actor Usuario
+                    participant Cat as Catalogo.html
+                    participant Cart as Carrito JS
+                    participant Bank as Pasarela (Simulada)
+                    Usuario->>Cat: Selecciona filtro / Agrega producto
+                    Cat->>Cart: Actualiza estado y suma total
+                    Usuario->>Cart: Clic en Checkout
+                    Cart->>Bank: Genera identificador único (SB-XXXXXX)
+                    Bank-->>Usuario: Muestra confirmación de pedido seguro
+            </div>
+        </div>
+
+        <div class="view-section">
+            <h2>4. Vista de Despliegue (Deployment View)</h2>
+            <p>Infraestructura física y entorno de ejecución del prototipo.</p>
+            <div class="mermaid">
+                graph LR
+                    Client[Navegador Web Cliente] -->|HTTPS / TLS| Server[Servidor Web Estático / Hosting]
+                    Server -->|CDN JS| CDNs[jsDelivr / Mermaid]
+            </div>
+        </div>
+
+        <div class="view-section">
+            <h2>5. Vista de Implementación (Development View)</h2>
+            <p>Organización modular de los archivos fuente del proyecto.</p>
+            <div class="mermaid">
+                graph TD
+                    Root[Proyecto Sockbuster] --> Index[index.html - Inicio]
+                    Root --> Catalog[catalogo.html - Tienda Interactiva]
+                    Root --> Diagrams[diagramas.html - Documentación 4+1]
+            </div>
+        </div>
+    </div>
+</body>
+</html>

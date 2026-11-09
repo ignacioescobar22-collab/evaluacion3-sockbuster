@@ -1,1 +1,127 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Sockbuster - Catálogo</title><style>body{font-family:Arial,sans-serif;margin:20px;background-color:#f4f4f4;}header{display:flex;justify-content:space-between;background:#111;color:white;padding:15px;}.filter-section{margin:20px 0;}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;}.card{background:white;padding:15px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.1);text-align:center;}.card img{max-width:100%;height:150px;object-fit:cover;}.btn-add{background:#28a745;color:white;border:none;padding:8px;cursor:pointer;width:100%;border-radius:4px;}.cart-box{background:white;padding:15px;margin-top:20px;border-radius:8px;}</style></head><body><header><h2>🎬 Sockbuster Catálogo</h2><a href="index.html" style="color:white;">Volver al Inicio</a></header><div class="filter-section"><label><strong>Filtrar por Colección Temática:</strong> </label><select id="categoryFilter" onchange="filterProducts()"><option value="todos">Todos los Modelos</option><option value="Ciencia Ficción">Ciencia Ficción</option><option value="Terror 80s">Terror 80s</option><option value="Animación">Animación</option></select></div><div class="grid" id="productGrid"></div><div class="cart-box"><h3>🛒 Carrito de Compras</h3><ul id="cartItems"></ul><p><strong>Total:</strong> $<span id="cartTotal">0</span></p><button onclick="simulateCheckout()" style="background:#007bff; color:white; padding:10px; border:none; cursor:pointer;">Proceder al Checkout</button></div><script>const productos=[{id:1,nombre:"Calcetines Marty McFly",cat:"Ciencia Ficción",precio:5990,stock:12,img:"https://unsplash.com"},{id:2,nombre:"Calcetines Freddy Krueger",cat:"Terror 80s",precio:6490,stock:5,img:"https://unsplash.com"},{id:3,nombre:"Calcetines Homer Simpson",cat:"Animación",precio:4990,stock:20,img:"https://unsplash.com"}];let carrito=;function renderProducts(lista){const grid=document.getElementById("productGrid");grid.innerHTML="";lista.forEach(p=>{grid.innerHTML+=`<div class="card"><img src="${p.img}" alt="${p.nombre}"><h4>${p.nombre}</h4><p>Colección: ${p.cat}</p><p><strong>Precio:</strong> $${p.precio}</p><p>Stock: ${p.stock} | Tallas: M, L</p><button class="btn-add" onclick="addToCart(${p.id})">Agregar al Carrito</button></div>`;});}function filterProducts(){const val=document.getElementById("categoryFilter").value;const filtrados=val==="todos"?productos:productos.filter(p=>p.cat===val);renderProducts(filtrados);}function addToCart(id){const prod=productos.find(p=>p.id===id);carrito.push(prod);updateCart();}function updateCart(){const list=document.getElementById("cartItems");list.innerHTML="";let total=0;carrito.forEach((item,index)=>{list.innerHTML+=`<li>${item.nombre} - $${item.precio} <button onclick="removeItem(${index})">❌</button></li>`;total+=item.precio;});document.getElementById("cartTotal").innerText=total;}function removeItem(index){carrito.splice(index,1);updateCart();}function simulateCheckout(){if(carrito.length===0)return alert("El carrito está vacío");const orderId="SB-"+Math.floor(Math.random()*900000+100000);alert(`🎉 ¡Simulación de Compra Exitosa!\n\nID Único de Pedido: ${orderId}\nTotal procesado de forma segura vía HTTPS.`);carrito=;updateCart();}renderProducts(productos);</script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sockbuster - Catálogo Interactivo</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; color: #333; }
+        header { display: flex; justify-content: space-between; align-items: center; background: #111; color: white; padding: 15px 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        header h2 { margin: 0; color: #E50914; }
+        header a { color: white; text-decoration: none; font-weight: bold; background: #333; padding: 8px 15px; border-radius: 4px; }
+        .main-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .filter-section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .filter-section select { padding: 10px; font-size: 16px; border-radius: 4px; border: 1px solid #ccc; width: 250px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+        .card img { max-width: 100%; height: 200px; object-fit: cover; border-radius: 6px; }
+        .card h4 { margin: 15px 0 5px 0; font-size: 18px; }
+        .card .meta { color: #666; font-size: 14px; margin-bottom: 10px; }
+        .card .price { font-size: 20px; font-weight: bold; color: #E50914; margin: 10px 0; }
+        .btn-add { background: #28a745; color: white; border: none; padding: 10px; cursor: pointer; width: 100%; border-radius: 4px; font-weight: bold; font-size: 15px; }
+        .btn-add:hover { background: #218838; }
+        .cart-box { background: white; padding: 25px; margin-top: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        .cart-box h3 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0; }
+        #cartItems { list-style: none; padding: 0; }
+        #cartItems li { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; align-items: center; }
+        .btn-remove { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .checkout-btn { background: #007bff; color: white; padding: 12px 25px; border: none; cursor: pointer; font-size: 16px; font-weight: bold; border-radius: 4px; margin-top: 15px; }
+        .checkout-btn:hover { background: #0069d9; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>🎬 Sockbuster Catálogo</h2>
+        <a href="index.html">Volver al Inicio</a>
+    </header>
+
+    <div class="main-container">
+        <div class="filter-section">
+            <label style="font-weight: bold; margin-right: 10px;">Filtrar por Colección Temática (RF01): </label>
+            <select id="categoryFilter" onchange="filterProducts()">
+                <option value="todos">Todos los Modelos</option>
+                <option value="Ciencia Ficción">Ciencia Ficción</option>
+                <option value="Terror 80s">Terror 80s</option>
+                <option value="Animación">Animación</option>
+            </select>
+        </div>
+
+        <div class="grid" id="productGrid"></div>
+
+        <div class="cart-box">
+            <h3>🛒 Carrito y Gestión de Pedidos (RF02)</h3>
+            <ul id="cartItems"></ul>
+            <p style="font-size: 18px; font-weight: bold;">Total: $<span id="cartTotal">0</span></p>
+            <button class="checkout-btn" onclick="simulateCheckout()">Simular Checkout e Identificador</button>
+        </div>
+    </div>
+
+    <script>
+        const productos = [
+            { id: 1, nombre: "Calcetines Marty McFly", cat: "Ciencia Ficción", precio: 5990, stock: 12, img: "https://images.unsplash.com/photo-1582966772680-86ec13c38229?w=500&auto=format&fit=crop&q=60" },
+            { id: 2, nombre: "Calcetines Freddy Krueger", cat: "Terror 80s", precio: 6490, stock: 5, img: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=500&auto=format&fit=crop&q=60" },
+            { id: 3, nombre: "Calcetines Homer Simpson", cat: "Animación", precio: 4990, stock: 20, img: "https://images.unsplash.com/photo-1542272604-787c96355d54?w=500&auto=format&fit=crop&q=60" }
+        ];
+
+        let carrito = [];
+
+        function renderProducts(lista) {
+            const grid = document.getElementById("productGrid");
+            grid.innerHTML = "";
+            lista.forEach(p => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <div>
+                            <img src="${p.img}" alt="${p.nombre}">
+                            <h4>${p.nombre}</h4>
+                            <div class="meta">Colección: ${p.cat}<br>Stock: ${p.stock} u. | Tallas: M, L</div>
+                        </div>
+                        <div>
+                            <div class="price">$${p.precio}</div>
+                            <button class="btn-add" onclick="addToCart(${p.id})">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterProducts() {
+            const val = document.getElementById("categoryFilter").value;
+            const filtrados = val === "todos" ? productos : productos.filter(p => p.cat === val);
+            renderProducts(filtrados);
+        }
+
+        function addToCart(id) {
+            const prod = productos.find(p => p.id === id);
+            carrito.push(prod);
+            updateCart();
+        }
+
+        function updateCart() {
+            const list = document.getElementById("cartItems");
+            list.innerHTML = "";
+            let total = 0;
+            carrito.forEach((item, index) => {
+                list.innerHTML += `<li><span>${item.nombre} - $${item.precio}</span> <button class="btn-remove" onclick="removeItem(${index})">Eliminar</button></li>`;
+                total += item.precio;
+            });
+            document.getElementById("cartTotal").innerText = total.toLocaleString('es-CL');
+        }
+
+        function removeItem(index) {
+            carrito.splice(index, 1);
+            updateCart();
+        }
+
+        function simulateCheckout() {
+            if(carrito.length === 0) return alert("El carrito de compras está vacío.");
+            const orderId = "SB-" + Math.floor(Math.random() * 900000 + 100000);
+            alert(`🎉 [PROTOTIPO WEB] Checkout Exitoso\n\nIdentificador Único de Pedido: ${orderId}\nTotal: $${document.getElementById("cartTotal").innerText}\n\nCanal protegido de extremo a extremo mediante protocolo seguro HTTPS (RNF02).`);
+            carrito = [];
+            updateCart();
+        }
+
+        renderProducts(productos);
+    </script>
+</body>
+</html>
